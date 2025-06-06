@@ -18,10 +18,14 @@ from strategy import ema_crossover_strategy, simulate_ema_strategy_trades, add_r
 from candlestick import plot_candlestick
 from destek_direnc import find_support_resistance_levels, plot_candlestick_with_sr
 
-TELEGRAM_TOKEN = "7575130658:AAGFkjMI-33mre8ejWfnM-x4Hak1RY3Y7Vg"
-TELEGRAM_CHAT_ID = "1698539573"
+# Telegram API bilgilerini gizli tutmak için
+TELEGRAM_TOKEN = st.secrets["TELEGRAM_TOKEN"] if "TELEGRAM_TOKEN" in st.secrets else st.sidebar.text_input("Telegram API Tokenınızı girin (opsiyonel)", type="password")
+TELEGRAM_CHAT_ID = st.secrets["TELEGRAM_CHAT_ID"] if "TELEGRAM_CHAT_ID" in st.secrets else st.sidebar.text_input("Telegram Chat ID'nizi girin (opsiyonel)")
 
 def send_telegram_message(token, chat_id, message):
+    if not token or not chat_id:
+        print("Telegram API bilgileri eksik, bildirim gönderilmiyor.")
+        return
     url = f'https://api.telegram.org/bot{token}/sendMessage'
     data = {'chat_id': chat_id, 'text': message}
     try:
