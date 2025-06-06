@@ -105,6 +105,9 @@ if data_source == "Dosya Yükle":
         df = data_preparation(uploaded_file)
     else:
         dosya_yolu = os.path.join(veri_seti_klasoru, secili_hazir)
+        if not os.path.exists(dosya_yolu):
+            st.error(f"Dosya bulunamadı: {dosya_yolu}. Lütfen dosyanın var olduğundan ve doğru dizinde olduğundan emin olun.")
+            st.stop()
         with open(dosya_yolu, "rb") as f:
             df = data_preparation(f)
 else:
