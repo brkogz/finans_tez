@@ -57,6 +57,7 @@ def data_preparation(uploaded_file):
 def get_binance_ohlc(symbol="BTCUSDT", interval="1m", limit=100):
     url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
     response = requests.get(url)
+    st.write("Binance API yanıtı:", response.status_code, response.text[:500])
     data = response.json()
     df = pd.DataFrame(data, columns=[
         'timestamp', 'open', 'high', 'low', 'close', 'volume',
@@ -75,6 +76,7 @@ def get_binance_ohlc(symbol="BTCUSDT", interval="1m", limit=100):
         'volume': 'TickVolume'
     })
     df = df[['Date', 'Open', 'High', 'Low', 'Close', 'TickVolume']]
+    st.write("Çekilen canlı veri DataFrame:", df.head())
     return df
 
 # Hazır veri setleri klasörü ve dosya isimleri
@@ -332,3 +334,6 @@ with tab7:
     if st.button("Verileri Excel'e Kaydet"):
         df.to_excel(f"{symbol}_{interval}_canli_veri.xlsx", index=False)
         st.success("Veriler kaydedildi!")
+
+    if data_source == "Canlı Veri":
+        st.write("Canlı veri DataFrame:", df)
