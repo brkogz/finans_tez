@@ -60,5 +60,5 @@ Bu uygulama, finansal zaman serisi verileri üzerinde teknik analiz, otomatik st
 ---
 
 **Herhangi bir sorun veya geliştirme öneriniz olursa iletişime geçebilirsiniz!** 
-mail= 201805050@stu.adu.edu.tr
-Berk OĞUZ
+
+Berk OĞUZ Mail= 201805050@stu.adu.edu.tr 

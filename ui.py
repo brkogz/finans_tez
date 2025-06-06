@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(page_title="Finansal Analiz & ML Demo", layout="wide")
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -17,10 +18,6 @@ from ml import prepare_ml_data, train_and_evaluate_ml
 from strategy import ema_crossover_strategy, simulate_ema_strategy_trades, add_risk_reward_column, sum_risk_reward, plot_ema_strategy_trades
 from candlestick import plot_candlestick
 from destek_direnc import find_support_resistance_levels, plot_candlestick_with_sr
-
-# Telegram API bilgilerini gizli tutmak için
-TELEGRAM_TOKEN = st.secrets["TELEGRAM_TOKEN"] if "TELEGRAM_TOKEN" in st.secrets else st.sidebar.text_input("Telegram API Tokenınızı girin (opsiyonel)", type="password")
-TELEGRAM_CHAT_ID = st.secrets["TELEGRAM_CHAT_ID"] if "TELEGRAM_CHAT_ID" in st.secrets else st.sidebar.text_input("Telegram Chat ID'nizi girin (opsiyonel)")
 
 def send_telegram_message(token, chat_id, message):
     if not token or not chat_id:
@@ -93,7 +90,6 @@ hazir_dosyalar = [
     "XAUUSD_Daily.csv"
 ]
 
-st.set_page_config(page_title="Finansal Analiz & ML Demo", layout="wide")
 st.title("📊 Finansal Zaman Serisi Analiz ve Makine Öğrenmesi")
 
 # --- Veri Yükleme ve Ön İşleme ---
@@ -124,8 +120,14 @@ else:
 st.subheader("Veri Önizleme")
 st.dataframe(df.head())
 
+# --- Parametreler ---
 st.sidebar.header("Parametreler")
 risk_reward = st.sidebar.number_input("Risk/Ödül Oranı (R)", min_value=1, max_value=10, value=3, step=1)
+
+# Telegram API bilgileri (sidebar'ın en altında, sadece bir kez)
+st.sidebar.markdown("---")
+TELEGRAM_TOKEN = st.sidebar.text_input("Telegram API Tokenınızı girin (opsiyonel)", type="password", key="telegram_token_input")
+TELEGRAM_CHAT_ID = st.sidebar.text_input("Telegram Chat ID'nizi girin (opsiyonel)", key="telegram_chatid_input")
 
 # --- Sekmeler ---
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
