@@ -205,27 +205,29 @@ with tab5:
         df_viz = df_viz.reset_index(drop=True)
         df_viz = df_viz.dropna()
         df_viz = df_viz.tail(50)  # Son 50 mum
-        st.info("Canlı veri ile sade fiyat çizgi grafiği ve destek/direnç seviyeleri gösteriliyor.")
-        min_price = df_viz['Close'].min() - 100
-        max_price = df_viz['Close'].max() + 100
-        supports, resistances = find_support_resistance_levels(df_viz, price_col='Close', order=10, tolerance=0.002)
-        fig, ax = plt.subplots(figsize=(8, 4))
-        ax.plot(df_viz['Date'], df_viz['Close'], color='dodgerblue', label='Close')
-        ax.set_ylim(min_price, max_price)
-        ax.set_xlabel('Tarih')
-        ax.set_ylabel('Fiyat')
-        ax.set_title('Canlı Veri - Fiyat Çizgi Grafiği')
-        # Destek ve dirençleri çiz
-        for s in supports:
-            ax.axhline(s, color='deepskyblue', linestyle='--', linewidth=1, alpha=0.7, label='Destek')
-        for r in resistances:
-            ax.axhline(r, color='orange', linestyle='--', linewidth=1, alpha=0.7, label='Direnç')
-        # Tek seferlik legend için
-        handles, labels = ax.get_legend_handles_labels()
-        by_label = dict(zip(labels, handles))
-        ax.legend(by_label.values(), by_label.keys())
-        plt.xticks(rotation=30)
-        st.pyplot(fig)
+        if df_viz.empty or df_viz['Close'].isnull().all():
+            st.warning("Canlı veri yüklenemedi veya veri seti boş!")
+        else:
+            min_price = df_viz['Close'].min() - 100
+            max_price = df_viz['Close'].max() + 100
+            supports, resistances = find_support_resistance_levels(df_viz, price_col='Close', order=10, tolerance=0.002)
+            fig, ax = plt.subplots(figsize=(8, 4))
+            ax.plot(df_viz['Date'], df_viz['Close'], color='dodgerblue', label='Close')
+            ax.set_ylim(min_price, max_price)
+            ax.set_xlabel('Tarih')
+            ax.set_ylabel('Fiyat')
+            ax.set_title('Canlı Veri - Fiyat Çizgi Grafiği')
+            # Destek ve dirençleri çiz
+            for s in supports:
+                ax.axhline(s, color='deepskyblue', linestyle='--', linewidth=1, alpha=0.7, label='Destek')
+            for r in resistances:
+                ax.axhline(r, color='orange', linestyle='--', linewidth=1, alpha=0.7, label='Direnç')
+            # Tek seferlik legend için
+            handles, labels = ax.get_legend_handles_labels()
+            by_label = dict(zip(labels, handles))
+            ax.legend(by_label.values(), by_label.keys())
+            plt.xticks(rotation=30)
+            st.pyplot(fig)
     else:
         supports, resistances = find_support_resistance_levels(df, price_col='Close', order=10, tolerance=0.002)
         if len(supports) == 0 or len(resistances) == 0 or np.any(np.isnan(supports)) or np.any(np.isnan(resistances)):
